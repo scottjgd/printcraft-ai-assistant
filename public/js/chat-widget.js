@@ -16,9 +16,19 @@
             this.showGreeting();
             this.applyTheme();
 
+            // Show teaser label after 3s, hide after 9s
+            setTimeout(function() {
+                if (!PCAI_Chat.isOpen) {
+                    $('#pcai-teaser').addClass('visible');
+                }
+            }, 3000);
+            setTimeout(function() {
+                $('#pcai-teaser').removeClass('visible');
+            }, 9000);
+
             setTimeout(function() {
                 PCAI_Chat.showBadge();
-            }, 8000);
+            }, 10000);
         },
 
         applyTheme: function() {
@@ -37,6 +47,9 @@
 
         bindEvents: function() {
             $('#pcai-toggle').on('click', function() { PCAI_Chat.toggle(); });
+            $('#pcai-teaser').on('click keypress', function(e) {
+                if (e.type === 'click' || e.which === 13) { PCAI_Chat.open(); }
+            });
             $('#pcai-minimize').on('click', function() { PCAI_Chat.close(); });
             $('#pcai-send').on('click', function() { PCAI_Chat.sendMessage(); });
             $('#pcai-input').on('keydown', function(e) {
@@ -57,10 +70,12 @@
 
         open: function() {
             this.isOpen = true;
+            $('#pcai-teaser').removeClass('visible');
             $('#pcai-panel').addClass('open');
             $('#pcai-icon-chat').hide();
             $('#pcai-icon-close').show();
             $('#pcai-badge').hide().text('');
+            $('#pcai-toggle').removeClass('has-badge');
             $('#pcai-input').focus();
             this.scrollToBottom();
         },
@@ -75,6 +90,7 @@
         showBadge: function() {
             if (!this.isOpen && this.messageCount === 0) {
                 $('#pcai-badge').text('1').show();
+                $('#pcai-toggle').addClass('has-badge');
             }
         },
 
