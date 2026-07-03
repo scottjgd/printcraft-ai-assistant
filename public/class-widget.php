@@ -62,9 +62,16 @@ class PCAI_Widget {
 
                 <div id="pcai-messages" role="log" aria-live="polite"></div>
 
-                <div id="pcai-escalation-banner" style="display:none">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13 19.79 19.79 0 0 1 1.61 4.39 2 2 0 0 1 3.6 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6.16 6.16l.94-.94a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
-                    <span>Our team has been notified and will follow up with you!</span>
+                <div id="pcai-contact-form" style="display:none">
+                    <p id="pcai-contact-intro">So we can follow up with you directly, please leave your contact info:</p>
+                    <input type="text"  id="pcai-contact-name"  placeholder="Your name" autocomplete="name">
+                    <input type="email" id="pcai-contact-email" placeholder="Email address" autocomplete="email">
+                    <input type="tel"   id="pcai-contact-phone" placeholder="Phone number (optional)" autocomplete="tel">
+                    <button id="pcai-contact-submit">Send My Info</button>
+                    <p id="pcai-contact-thanks" style="display:none">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        Thanks! We'll be in touch soon.
+                    </p>
                 </div>
 
                 <div id="pcai-input-area">
