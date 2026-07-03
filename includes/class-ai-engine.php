@@ -154,7 +154,7 @@ PROMPT;
             return array(
                 'reply'      => $raw,
                 'confidence' => 0.5,
-                'escalate'   => false,
+                'escalate'   => $this->is_explicit_escalation_request( $message ),
             );
         }
 
