@@ -43,6 +43,9 @@ class PCAI_Database {
             session_id VARCHAR(64) NOT NULL,
             trigger_message LONGTEXT NOT NULL,
             ai_reply LONGTEXT NOT NULL,
+            customer_name VARCHAR(100) DEFAULT NULL,
+            customer_email VARCHAR(200) DEFAULT NULL,
+            customer_phone VARCHAR(50) DEFAULT NULL,
             status ENUM('open','in_progress','resolved') DEFAULT 'open',
             resolved_by VARCHAR(100) DEFAULT NULL,
             notes TEXT DEFAULT NULL,
@@ -61,6 +64,13 @@ class PCAI_Database {
 
         $kb = new PCAI_Knowledge_Base();
         $kb->seed_initial_knowledge();
+    }
+
+    public static function maybe_upgrade() {
+        if ( get_option( 'pcai_db_version' ) !== PCAI_VERSION ) {
+            self::install();
+            update_option( 'pcai_db_version', PCAI_VERSION );
+        }
     }
 
     public static function deactivate() {
