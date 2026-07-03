@@ -113,8 +113,8 @@
                         if (res.data.escalate && !PCAI_Chat.hasEscalated) {
                             PCAI_Chat.hasEscalated = true;
                             setTimeout(function() {
-                                $('#pcai-escalation-banner').slideDown(200);
-                            }, 800);
+                                PCAI_Chat.showContactForm();
+                            }, 900);
                         }
                     } else {
                         PCAI_Chat.addBotMessage("I'm having trouble right now. Please visit our <a href='https://printcraftcreations.ca/contact' target='_blank'>Contact page</a> and we'll help you right away!");
@@ -182,6 +182,45 @@
                 helpful: helpful ? '1' : '0',
                 question: question,
                 answer: answer,
+            });
+        },
+
+        showContactForm: function() {
+            var $form = $('#pcai-contact-form');
+            $form.slideDown(250);
+            PCAI_Chat.scrollToBottom();
+
+            $('#pcai-contact-submit').off('click').on('click', function() {
+                var name  = $('#pcai-contact-name').val().trim();
+                var email = $('#pcai-contact-email').val().trim();
+                var phone = $('#pcai-contact-phone').val().trim();
+
+                if (!email && !phone) {
+                    $('#pcai-contact-email').focus();
+                    return;
+                }
+
+                var $btn = $(this);
+                $btn.prop('disabled', true).text('Sending…');
+
+                $.ajax({
+                    url: PCAI.ajax_url,
+                    type: 'POST',
+                    data: {
+                        action: 'pcai_save_contact',
+                        nonce: PCAI.nonce,
+                        session_id: PCAI_Chat.sessionId,
+                        name: name,
+                        email: email,
+                        phone: phone,
+                    },
+                    complete: function() {
+                        $form.find('input, button').hide();
+                        $('#pcai-contact-intro').hide();
+                        $('#pcai-contact-thanks').show();
+                        PCAI_Chat.scrollToBottom();
+                    },
+                });
             });
         },
 
