@@ -108,9 +108,10 @@
                     PCAI_Chat.hideTyping();
                     $('#pcai-send').prop('disabled', false);
                     if (res.success) {
-                        var msgId = PCAI_Chat.addBotMessage(res.data.reply, true);
+                        var showFb = !res.data.api_error;
+                        var msgId = PCAI_Chat.addBotMessage(res.data.reply, showFb);
                         PCAI_Chat.lastBotMessageId = msgId;
-                        if (res.data.escalate && !PCAI_Chat.hasEscalated) {
+                        if (res.data.escalate && !res.data.api_error && !PCAI_Chat.hasEscalated) {
                             PCAI_Chat.hasEscalated = true;
                             setTimeout(function() {
                                 PCAI_Chat.showContactForm();
