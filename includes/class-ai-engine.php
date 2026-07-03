@@ -76,11 +76,25 @@ PROMPT;
     }
 
     public function respond( $message, $history = array(), $page_url = '' ) {
+        // Handle simple greetings locally — never fail on "Hello"
+        $greeting_patterns = array( '/^\s*(hi|hello|hey|howdy|good (morning|afternoon|evening)|hiya|yo)\s*[!.]?\s*$/i' );
+        foreach ( $greeting_patterns as $pattern ) {
+            if ( preg_match( $pattern, trim( $message ) ) ) {
+                $bot_name = get_option( 'pcai_bot_name', 'Craft' );
+                return array(
+                    'reply'      => "Hi there! 👋 I'm {$bot_name}, your Print Craft Creations assistant. How can I help you today? I can answer questions about our products, ordering, shipping, sizing, and more!",
+                    'confidence' => 1.0,
+                    'escalate'   => false,
+                );
+            }
+        }
+
         if ( empty( $this->api_key ) ) {
             return array(
-                'reply'      => 'Our AI assistant is currently being set up. Please contact us directly through our Contact page — we\'re happy to help!',
+                'reply'      => 'Our AI assistant is currently being configured. In the meantime, please visit our <a href="https://printcraftcreations.ca/contact">Contact page</a> and our team will be happy to help!',
                 'confidence' => 0,
-                'escalate'   => true,
+                'escalate'   => false,
+                'api_error'  => true,
             );
         }
 
@@ -160,9 +174,10 @@ PROMPT;
 
     private function fallback_response() {
         return array(
-            'reply'      => 'I\'m having a little trouble right now. Please visit our Contact page at printcraftcreations.ca/contact and our team will help you right away!',
+            'reply'      => 'I\'m having a little trouble connecting right now. You can reach us directly at <a href="https://printcraftcreations.ca/contact">printcraftcreations.ca/contact</a> and our team will help you right away!',
             'confidence' => 0,
-            'escalate'   => true,
+            'escalate'   => false,
+            'api_error'  => true,
         );
     }
 }
