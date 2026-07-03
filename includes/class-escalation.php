@@ -38,17 +38,42 @@ class PCAI_Escalation {
 
     public function update_contact_info( $session_id, $name, $email, $phone ) {
         global $wpdb;
-        $wpdb->update(
-            $this->table,
-            array(
-                'customer_name'  => sanitize_text_field( $name ),
-                'customer_email' => sanitize_email( $email ),
-                'customer_phone' => sanitize_text_field( $phone ),
-            ),
-            array( 'session_id' => sanitize_text_field( $session_id ) ),
-            array( '%s', '%s', '%s' ),
-            array( '%s' )
-        );
+
+        // Check whether an escalation row already exists for this session.
+        $existing_id = $wpdb->get_var( $wpdb->prepare(
+            "SELECT id FROM {$this->table} WHERE session_id = %s",
+            sanitize_text_field( $session_id )
+        ) );
+
+        if ( $existing_id ) {
+            // Row exists — update it with contact info.
+            $wpdb->update(
+                $this->table,
+                array(
+                    'customer_name'  => sanitize_text_field( $name ),
+                    'customer_email' => sanitize_email( $email ),
+                    'customer_phone' => sanitize_text_field( $phone ),
+                ),
+                array( 'id' => intval( $existing_id ) ),
+                array( '%s', '%s', '%s' ),
+                array( '%d' )
+            );
+        } else {
+            // No escalation row yet (trigger may have failed silently) — create one now.
+            $wpdb->insert(
+                $this->table,
+                array(
+                    'session_id'      => sanitize_text_field( $session_id ),
+                    'trigger_message' => '',
+                    'ai_reply'        => '',
+                    'customer_name'   => sanitize_text_field( $name ),
+                    'customer_email'  => sanitize_email( $email ),
+                    'customer_phone'  => sanitize_text_field( $phone ),
+                    'status'          => 'open',
+                ),
+                array( '%s', '%s', '%s', '%s', '%s', '%s', '%s' )
+            );
+        }
 
         $this->send_contact_notification( $session_id, $name, $email, $phone );
     }
