@@ -231,10 +231,20 @@
                         email: email,
                         phone: phone,
                     },
-                    complete: function() {
-                        $form.find('input, button').hide();
-                        $('#pcai-contact-intro').hide();
-                        $('#pcai-contact-thanks').show();
+                    success: function(res) {
+                        if (res.success) {
+                            $form.find('input, button').hide();
+                            $('#pcai-contact-intro').hide();
+                            $('#pcai-contact-thanks').show();
+                        } else {
+                            $btn.prop('disabled', false).text('Send My Info');
+                            $btn.after('<p style="color:#dc2626;font-size:12px;margin:4px 0 0;">Something went wrong — please try again.</p>');
+                        }
+                        PCAI_Chat.scrollToBottom();
+                    },
+                    error: function() {
+                        $btn.prop('disabled', false).text('Send My Info');
+                        $btn.after('<p style="color:#dc2626;font-size:12px;margin:4px 0 0;">Could not connect — please email us directly.</p>');
                         PCAI_Chat.scrollToBottom();
                     },
                 });
