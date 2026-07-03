@@ -91,7 +91,7 @@ PROMPT;
 
         if ( empty( $this->api_key ) ) {
             return array(
-                'reply'      => 'Our AI assistant is currently being configured. In the meantime, please visit our <a href="https://printcraftcreations.ca/contact">Contact page</a> and our team will be happy to help!',
+                'reply'      => 'Our AI assistant is currently being configured. In the meantime, you can reach us at printcraftcreations.ca/contact and our team will be happy to help!',
                 'confidence' => 0,
                 'escalate'   => false,
                 'api_error'  => true,
@@ -174,7 +174,7 @@ PROMPT;
 
     private function fallback_response() {
         return array(
-            'reply'      => 'I\'m having a little trouble connecting right now. You can reach us directly at <a href="https://printcraftcreations.ca/contact">printcraftcreations.ca/contact</a> and our team will help you right away!',
+            'reply'      => 'I\'m having a little trouble connecting right now. You can reach us directly at https://printcraftcreations.ca/contact and our team will help you right away!',
             'confidence' => 0,
             'escalate'   => false,
             'api_error'  => true,
