@@ -165,11 +165,40 @@ PROMPT;
             $escalate = true;
         }
 
+        // Always escalate if the customer explicitly asked to speak to a person,
+        // regardless of whether the AI set escalate=true in its JSON.
+        if ( $this->is_explicit_escalation_request( $message ) ) {
+            $escalate = true;
+        }
+
         return array(
             'reply'      => sanitize_textarea_field( $parsed['reply'] ),
             'confidence' => $confidence,
             'escalate'   => $escalate,
         );
+    }
+
+    private function is_explicit_escalation_request( $message ) {
+        $patterns = array(
+            '/speak\s+(to|with)\s+(a\s+)?(person|human|someone|agent|representative|rep|staff|team)/i',
+            '/talk\s+(to|with)\s+(a\s+)?(person|human|someone|agent|representative|rep|staff|team)/i',
+            '/connect\s+me\s+(to|with)/i',
+            '/transfer\s+me/i',
+            '/real\s+(person|human|agent)/i',
+            '/human\s+(agent|support|help)/i',
+            '/(need|want)\s+(to\s+)?(talk|speak|chat)\s+(to|with)\s+(a\s+)?(human|person|real|actual|live)/i',
+            '/someone\s+else/i',
+            '/can\s+I\s+speak/i',
+            '/let\s+me\s+speak/i',
+            '/get\s+a\s+(human|person|agent|rep)/i',
+            '/prefer\s+(a\s+)?(human|person|agent)/i',
+        );
+        foreach ( $patterns as $p ) {
+            if ( preg_match( $p, $message ) ) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private function fallback_response() {
