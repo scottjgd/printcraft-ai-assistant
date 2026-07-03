@@ -53,20 +53,22 @@
             <?php wp_nonce_field('pcai_escalation_update'); ?>
             <input type="hidden" name="action" value="pcai_update_escalation">
             <input type="hidden" name="escalation_id" value="<?php echo esc_attr($e->id); ?>">
-            <div style="display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap;margin-top:10px;">
-                <div>
-                    <label style="font-size:12px;font-weight:600;">Status</label>
-                    <select name="status">
+            <div class="pcai-esc-form-row">
+                <div class="pcai-esc-form-status">
+                    <label class="pcai-esc-form-label">Status</label>
+                    <select name="status" style="width:100%">
                         <option value="open" <?php selected($e->status,'open'); ?>>Open</option>
                         <option value="in_progress" <?php selected($e->status,'in_progress'); ?>>In Progress</option>
                         <option value="resolved" <?php selected($e->status,'resolved'); ?>>Resolved</option>
                     </select>
                 </div>
-                <div style="flex:1;min-width:200px;">
-                    <label style="font-size:12px;font-weight:600;">Internal Notes</label>
-                    <input type="text" name="notes" value="<?php echo esc_attr($e->notes ?? ''); ?>" class="regular-text" placeholder="e.g. Replied via email">
+                <div class="pcai-esc-form-notes">
+                    <label class="pcai-esc-form-label">Internal Notes</label>
+                    <input type="text" name="notes" value="<?php echo esc_attr($e->notes ?? ''); ?>" style="width:100%;box-sizing:border-box;" placeholder="e.g. Replied via email">
                 </div>
-                <button type="submit" class="button button-primary">Update</button>
+                <div class="pcai-esc-form-btn">
+                    <button type="submit" class="button button-primary" style="width:100%">Update</button>
+                </div>
             </div>
         </form>
     </div>
