@@ -81,16 +81,17 @@
     </div>
     <?php endif; ?>
 
-    <table class="wp-list-table widefat fixed striped pcai-table">
+    <div class="pcai-table-wrap">
+    <table class="wp-list-table widefat striped pcai-table">
         <thead>
             <tr>
-                <th style="width:30%">Question</th>
-                <th>Answer</th>
-                <th style="width:90px">Category</th>
-                <th style="width:80px">Source</th>
-                <th style="width:60px">Uses</th>
-                <th style="width:80px">Status</th>
-                <th style="width:100px">Actions</th>
+                <th style="min-width:180px">Question</th>
+                <th style="min-width:180px" class="pcai-col-hide-mobile">Answer</th>
+                <th style="min-width:90px">Category</th>
+                <th style="min-width:70px" class="pcai-col-hide-mobile">Source</th>
+                <th style="min-width:50px" class="pcai-col-hide-mobile">Uses</th>
+                <th style="min-width:70px">Status</th>
+                <th style="min-width:110px">Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -99,11 +100,11 @@
             <?php endif; ?>
             <?php foreach ( $entries as $entry ): ?>
             <tr>
-                <td><?php echo esc_html( $entry->question ); ?></td>
-                <td class="pcai-answer-preview"><?php echo esc_html( wp_trim_words( $entry->answer, 20 ) ); ?></td>
+                <td style="word-break:break-word;white-space:normal"><?php echo esc_html( $entry->question ); ?></td>
+                <td class="pcai-answer-preview pcai-col-hide-mobile"><?php echo esc_html( wp_trim_words( $entry->answer, 20 ) ); ?></td>
                 <td><span class="pcai-cat-badge"><?php echo esc_html( $entry->category ); ?></span></td>
-                <td><span class="pcai-source-<?php echo esc_attr($entry->source); ?>"><?php echo esc_html( ucfirst($entry->source) ); ?></span></td>
-                <td><?php echo esc_html( $entry->use_count ); ?></td>
+                <td class="pcai-col-hide-mobile"><span class="pcai-source-<?php echo esc_attr($entry->source); ?>"><?php echo esc_html( ucfirst($entry->source) ); ?></span></td>
+                <td class="pcai-col-hide-mobile"><?php echo esc_html( $entry->use_count ); ?></td>
                 <td>
                     <?php if ($entry->approved): ?>
                         <span class="pcai-badge-ok">Active</span>
@@ -111,7 +112,7 @@
                         <span class="pcai-badge-escalated">Pending</span>
                     <?php endif; ?>
                 </td>
-                <td>
+                <td style="white-space:nowrap">
                     <a href="<?php echo admin_url('admin.php?page=pcai-knowledge&edit=' . $entry->id); ?>" class="button button-small">Edit</a>
                     <form method="post" action="<?php echo admin_url('admin-post.php'); ?>" style="display:inline;" onsubmit="return confirm('Delete this entry?')">
                         <?php wp_nonce_field('pcai_kb_delete'); ?>
@@ -124,6 +125,7 @@
             <?php endforeach; ?>
         </tbody>
     </table>
+    </div>
     <p class="pcai-hint" style="margin-top:12px">
         <strong>Tip:</strong> Entries with source "Learned" came from AI attempts to answer questions. Review and approve them to improve AI accuracy over time.
     </p>
