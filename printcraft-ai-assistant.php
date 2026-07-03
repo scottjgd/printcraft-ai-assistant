@@ -3,7 +3,7 @@
  * Plugin Name: PrintCraft AI Assistant
  * Plugin URI: https://printcraftcreations.ca
  * Description: AI-powered customer service chatbot for Print Craft Creations. Learns from interactions and escalates to human support when needed.
- * Version: 1.0.2
+ * Version: 1.0.3
  * Author: Print Craft Creations
  * License: GPL-2.0+
  * Text Domain: printcraft-ai
@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-define( 'PCAI_VERSION', '1.0.2' );
+define( 'PCAI_VERSION', '1.0.3' );
 define( 'PCAI_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'PCAI_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'PCAI_PLUGIN_FILE', __FILE__ );
@@ -28,6 +28,9 @@ require_once PCAI_PLUGIN_DIR . 'public/class-widget.php';
 require_once PCAI_PLUGIN_DIR . 'admin/class-admin.php';
 
 register_activation_hook( __FILE__, array( 'PCAI_Database', 'install' ) );
+add_action( 'plugins_loaded', array( 'PCAI_Database', 'maybe_upgrade' ) );
+add_action( 'wp_ajax_nopriv_pcai_save_contact', array( 'PCAI_Escalation', 'handle_save_contact_ajax' ) );
+add_action( 'wp_ajax_pcai_save_contact', array( 'PCAI_Escalation', 'handle_save_contact_ajax' ) );
 register_deactivation_hook( __FILE__, array( 'PCAI_Database', 'deactivate' ) );
 
 function pcai_init() {
