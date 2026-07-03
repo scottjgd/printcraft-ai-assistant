@@ -3,7 +3,7 @@
  * Plugin Name: PrintCraft AI Assistant
  * Plugin URI: https://printcraftcreations.ca
  * Description: AI-powered customer service chatbot for Print Craft Creations. Learns from interactions and escalates to human support when needed.
- * Version: 1.0.9
+ * Version: 1.0.10
  * Author: Print Craft Creations
  * License: GPL-2.0+
  * Text Domain: printcraft-ai
@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-define( 'PCAI_VERSION', '1.0.9' );
+define( 'PCAI_VERSION', '1.0.10' );
 define( 'PCAI_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'PCAI_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'PCAI_PLUGIN_FILE', __FILE__ );
@@ -67,7 +67,7 @@ function pcai_ajax_handler() {
     $result = $ai_engine->respond( $message, $history, $page_url );
 
     $conversation->save_message( $session, 'user', $message );
-    $conversation->save_message( $session, 'assistant', $result['reply'], array(
+    $msg_db_id = $conversation->save_message( $session, 'assistant', $result['reply'], array(
         'confidence'    => $result['confidence'],
         'escalated'     => $result['escalate'],
         'page_url'      => $page_url,
@@ -78,9 +78,10 @@ function pcai_ajax_handler() {
     }
 
     wp_send_json_success( array(
-        'reply'     => $result['reply'],
-        'escalate'  => $result['escalate'],
-        'api_error' => ! empty( $result['api_error'] ),
+        'reply'      => $result['reply'],
+        'escalate'   => $result['escalate'],
+        'api_error'  => ! empty( $result['api_error'] ),
+        'msg_db_id'  => intval( $msg_db_id ),
         'support_email' => get_option( 'pcai_support_email', get_option( 'admin_email' ) ),
     ) );
 }
