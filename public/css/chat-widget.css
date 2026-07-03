@@ -1,0 +1,274 @@
+/* PrintCraft AI Chat Widget */
+:root {
+    --pcai-primary: #2563eb;
+    --pcai-primary-dark: #1d4ed8;
+    --pcai-radius: 16px;
+    --pcai-shadow: 0 8px 32px rgba(0,0,0,0.18);
+    --pcai-font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+#pcai-widget {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 999999;
+    font-family: var(--pcai-font);
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+#pcai-toggle {
+    position: relative;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--pcai-primary);
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    box-shadow: var(--pcai-shadow);
+    transition: background 0.2s, transform 0.2s;
+    outline: none;
+}
+#pcai-toggle:hover { background: var(--pcai-primary-dark); transform: scale(1.07); }
+#pcai-toggle svg { width: 26px; height: 26px; }
+
+#pcai-badge {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    background: #ef4444;
+    color: #fff;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    font-size: 11px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #fff;
+}
+
+#pcai-panel {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    bottom: 72px;
+    right: 0;
+    width: 360px;
+    max-width: calc(100vw - 32px);
+    height: 520px;
+    max-height: calc(100vh - 120px);
+    background: #fff;
+    border-radius: var(--pcai-radius);
+    box-shadow: var(--pcai-shadow);
+    overflow: hidden;
+    border: 1px solid rgba(0,0,0,0.08);
+    animation: pcai-slide-up 0.25s ease;
+}
+#pcai-panel.open { display: flex; }
+
+@keyframes pcai-slide-up {
+    from { opacity: 0; transform: translateY(16px) scale(0.97); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+#pcai-header {
+    background: var(--pcai-primary);
+    color: #fff;
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+}
+#pcai-avatar {
+    width: 36px;
+    height: 36px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+#pcai-avatar svg { width: 20px; height: 20px; }
+#pcai-header-info { flex: 1; }
+#pcai-header-info strong { display: block; font-size: 15px; font-weight: 600; }
+#pcai-header-info span { font-size: 11px; opacity: 0.8; }
+#pcai-minimize {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 22px;
+    cursor: pointer;
+    line-height: 1;
+    padding: 0 4px;
+    opacity: 0.8;
+    transition: opacity 0.15s;
+}
+#pcai-minimize:hover { opacity: 1; }
+
+#pcai-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    scroll-behavior: smooth;
+}
+#pcai-messages::-webkit-scrollbar { width: 4px; }
+#pcai-messages::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 4px; }
+
+.pcai-msg {
+    display: flex;
+    flex-direction: column;
+    max-width: 85%;
+    gap: 4px;
+}
+.pcai-msg.bot { align-self: flex-start; }
+.pcai-msg.user { align-self: flex-end; }
+
+.pcai-bubble {
+    padding: 10px 14px;
+    border-radius: 14px;
+    font-size: 13.5px;
+    line-height: 1.5;
+    word-break: break-word;
+}
+.pcai-msg.bot .pcai-bubble {
+    background: #f1f5f9;
+    color: #1e293b;
+    border-bottom-left-radius: 4px;
+}
+.pcai-msg.user .pcai-bubble {
+    background: var(--pcai-primary);
+    color: #fff;
+    border-bottom-right-radius: 4px;
+}
+
+.pcai-time {
+    font-size: 10px;
+    color: #94a3b8;
+    padding: 0 4px;
+}
+.pcai-msg.user .pcai-time { text-align: right; }
+
+.pcai-feedback {
+    display: flex;
+    gap: 6px;
+    padding: 0 2px;
+    margin-top: 2px;
+}
+.pcai-feedback button {
+    background: none;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    padding: 2px 8px;
+    font-size: 11px;
+    cursor: pointer;
+    color: #64748b;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+.pcai-feedback button:hover { background: #f8fafc; border-color: #cbd5e1; }
+.pcai-feedback button.active { background: #e0f2fe; border-color: #38bdf8; color: #0369a1; }
+
+.pcai-typing {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 10px 14px;
+    background: #f1f5f9;
+    border-radius: 14px;
+    border-bottom-left-radius: 4px;
+    width: fit-content;
+}
+.pcai-typing span {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #94a3b8;
+    animation: pcai-bounce 1.2s infinite;
+}
+.pcai-typing span:nth-child(2) { animation-delay: 0.2s; }
+.pcai-typing span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes pcai-bounce {
+    0%, 60%, 100% { transform: translateY(0); }
+    30% { transform: translateY(-5px); }
+}
+
+#pcai-escalation-banner {
+    background: #f0fdf4;
+    border-top: 1px solid #bbf7d0;
+    border-bottom: 1px solid #bbf7d0;
+    color: #166534;
+    padding: 10px 16px;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+#pcai-escalation-banner svg { width: 16px; height: 16px; flex-shrink: 0; }
+
+#pcai-input-area {
+    padding: 12px 12px;
+    border-top: 1px solid #e2e8f0;
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+    flex-shrink: 0;
+    background: #fff;
+}
+
+#pcai-input {
+    flex: 1;
+    border: 1px solid #e2e8f0;
+    border-radius: 20px;
+    padding: 9px 14px;
+    font-size: 13.5px;
+    font-family: var(--pcai-font);
+    resize: none;
+    outline: none;
+    transition: border-color 0.15s;
+    max-height: 80px;
+    overflow-y: auto;
+    line-height: 1.4;
+    color: #1e293b;
+    background: #f8fafc;
+}
+#pcai-input:focus { border-color: var(--pcai-primary); background: #fff; }
+#pcai-input::placeholder { color: #94a3b8; }
+
+#pcai-send {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: var(--pcai-primary);
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    flex-shrink: 0;
+    transition: background 0.15s, transform 0.15s;
+    outline: none;
+}
+#pcai-send:hover { background: var(--pcai-primary-dark); transform: scale(1.05); }
+#pcai-send:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+#pcai-send svg { width: 16px; height: 16px; }
+
+@media (max-width: 480px) {
+    #pcai-widget { bottom: 16px; right: 16px; }
+    #pcai-panel { width: calc(100vw - 32px); bottom: 76px; }
+}
