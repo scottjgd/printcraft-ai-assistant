@@ -145,7 +145,7 @@
                     $('#pcai-send').prop('disabled', false);
                     if (res.success) {
                         var showFb = !res.data.api_error;
-                        var msgId = PCAI_Chat.addBotMessage(res.data.reply, showFb);
+                        var msgId = PCAI_Chat.addBotMessage(res.data.reply, showFb, res.data.msg_db_id);
                         PCAI_Chat.lastBotMessageId = msgId;
                         // Show contact form if server flagged escalation OR
                         // if client-side keyword detection catches a human-request.
@@ -179,7 +179,7 @@
             this.scrollToBottom();
         },
 
-        addBotMessage: function(text, showFeedback) {
+        addBotMessage: function(text, showFeedback, dbId) {
             var id = 'pcai-msg-' + Date.now();
             var time = this.formatTime(new Date());
             var feedback = '';
@@ -189,28 +189,30 @@
                     '<button class="pcai-fb-no" data-id="' + id + '" title="This wasn\'t helpful">👎 Not helpful</button>' +
                     '</div>';
             }
-            var html = '<div class="pcai-msg bot" id="' + id + '">' +
+            var html = '<div class="pcai-msg bot" id="' + id + '" data-db-id="' + (dbId || 0) + '">' +
                 '<div class="pcai-bubble">' + this.linkify(text) + '</div>' +
                 '<span class="pcai-time">' + time + '</span>' +
                 feedback +
                 '</div>';
             $('#pcai-messages').append(html);
             this.scrollToBottom();
-            this.bindFeedback(id);
+            this.bindFeedback(id, text);
             return id;
         },
 
-        bindFeedback: function(id) {
+        bindFeedback: function(id, replyText) {
             var self = this;
             $('#fb-' + id + ' .pcai-fb-yes').on('click', function() {
-                $(this).addClass('active').siblings().prop('disabled', true);
-                self.sendFeedback(id, true, self.lastUserMessage, '');
+                $(this).addClass('active');
                 $('#fb-' + id).find('button').prop('disabled', true);
+                var dbId = $('#' + id).data('db-id');
+                self.sendFeedback(dbId, true, self.lastUserMessage, replyText);
             });
             $('#fb-' + id + ' .pcai-fb-no').on('click', function() {
-                $(this).addClass('active').siblings().prop('disabled', true);
-                self.sendFeedback(id, false, self.lastUserMessage, '');
+                $(this).addClass('active');
                 $('#fb-' + id).find('button').prop('disabled', true);
+                var dbId = $('#' + id).data('db-id');
+                self.sendFeedback(dbId, false, self.lastUserMessage, replyText);
             });
         },
 
