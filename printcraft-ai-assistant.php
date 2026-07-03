@@ -3,7 +3,7 @@
  * Plugin Name: PrintCraft AI Assistant
  * Plugin URI: https://printcraftcreations.ca
  * Description: AI-powered customer service chatbot for Print Craft Creations. Learns from interactions and escalates to human support when needed.
- * Version: 1.0.10
+ * Version: 1.0.11
  * Author: Print Craft Creations
  * License: GPL-2.0+
  * Text Domain: printcraft-ai
@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-define( 'PCAI_VERSION', '1.0.10' );
+define( 'PCAI_VERSION', '1.0.11' );
 define( 'PCAI_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'PCAI_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'PCAI_PLUGIN_FILE', __FILE__ );
