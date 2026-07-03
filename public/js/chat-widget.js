@@ -98,6 +98,26 @@
             this.addBotMessage(PCAI.greeting || 'Hi! How can I help you today?');
         },
 
+        isEscalationRequest: function(text) {
+            var patterns = [
+                /speak\s+(to|with)\s+(a\s+)?(person|human|someone|agent|rep|staff|team)/i,
+                /talk\s+(to|with)\s+(a\s+)?(person|human|someone|agent|rep|staff|team)/i,
+                /someone\s+else/i,
+                /can\s+i\s+speak/i,
+                /let\s+me\s+speak/i,
+                /real\s+(person|human|agent)/i,
+                /transfer\s+me/i,
+                /connect\s+me\s+(to|with)/i,
+                /get\s+a\s+(human|person|agent)/i,
+                /prefer\s+(a\s+)?(human|person)/i,
+                /human\s+(agent|support|help)/i,
+            ];
+            for (var i = 0; i < patterns.length; i++) {
+                if (patterns[i].test(text)) return true;
+            }
+            return false;
+        },
+
         sendMessage: function() {
             var text = $('#pcai-input').val().trim();
             if (!text) return;
@@ -127,14 +147,18 @@
                         var showFb = !res.data.api_error;
                         var msgId = PCAI_Chat.addBotMessage(res.data.reply, showFb);
                         PCAI_Chat.lastBotMessageId = msgId;
-                        if (res.data.escalate && !res.data.api_error && !PCAI_Chat.hasEscalated) {
+                        // Show contact form if server flagged escalation OR
+                        // if client-side keyword detection catches a human-request.
+                        var shouldEscalate = (res.data.escalate && !res.data.api_error) ||
+                                             PCAI_Chat.isEscalationRequest(text);
+                        if (shouldEscalate && !PCAI_Chat.hasEscalated) {
                             PCAI_Chat.hasEscalated = true;
                             setTimeout(function() {
                                 PCAI_Chat.showContactForm();
                             }, 900);
                         }
                     } else {
-                        PCAI_Chat.addBotMessage("I'm having trouble right now. Please visit our <a href='https://printcraftcreations.ca/contact' target='_blank'>Contact page</a> and we'll help you right away!");
+                        PCAI_Chat.addBotMessage("I'm having trouble right now. Please visit our contact page at https://printcraftcreations.ca/contact and we'll help you right away!");
                     }
                 },
                 error: function() {
