@@ -33,6 +33,20 @@
             </div>
             <a href="<?php echo admin_url('admin.php?page=pcai-conversations&session=' . urlencode($e->session_id)); ?>" class="button button-small">View Full Chat</a>
         </div>
+        <?php if ( $e->customer_name || $e->customer_email || $e->customer_phone ): ?>
+        <div class="pcai-esc-contact">
+            <strong>📞 Customer Contact Info</strong>
+            <div class="pcai-esc-contact-details">
+                <?php if ( $e->customer_name ):  ?><span><strong>Name:</strong>  <?php echo esc_html($e->customer_name); ?></span><?php endif; ?>
+                <?php if ( $e->customer_email ): ?><span><strong>Email:</strong> <a href="mailto:<?php echo esc_attr($e->customer_email); ?>"><?php echo esc_html($e->customer_email); ?></a></span><?php endif; ?>
+                <?php if ( $e->customer_phone ): ?><span><strong>Phone:</strong> <a href="tel:<?php echo esc_attr($e->customer_phone); ?>"><?php echo esc_html($e->customer_phone); ?></a></span><?php endif; ?>
+            </div>
+        </div>
+        <?php else: ?>
+        <div class="pcai-esc-no-contact">
+            <em>No contact info provided yet — customer was asked in the chat widget.</em>
+        </div>
+        <?php endif; ?>
         <div class="pcai-esc-body">
             <div class="pcai-esc-col">
                 <strong>Customer asked:</strong>
